@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'custom_config' => [
+        'JSON_UNESCAPED_SLASHES' => 64,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

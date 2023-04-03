@@ -27,4 +27,23 @@ class Company extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function getCompanies(string $filter = '')
+    {
+        $companies = $this->with('category')
+            ->when(
+                $filter,
+                function ($query, $filter) {
+                    return $query->where(
+                        function ($query) use ($filter) {
+                            $query->where('name', 'LIKE', "%$filter%")
+                                ->orWhere('email', 'LIKE', "%$filter%")
+                                ->orWhere('phone', 'LIKE', "%$filter%");
+                        }
+                    );;
+                }
+            )
+            ->paginate();
+        return $companies;
+    }
 }
