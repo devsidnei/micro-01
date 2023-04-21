@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # imagem micro 01
   micro_01:
-    build: 
+    build:
       args:
         user: sidnei
         uid: 1000
@@ -18,13 +18,15 @@ services:
       - db_micro_01
     networks:
       - microservices
-  
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   # nginx
   nginx_micro_01:
     image: nginx:alpine
     restart: unless-stopped
     ports:
-      - 9000:80
+      - 9001:80
     volumes:
       - ./:/var/www/
       - ./docker/nginx/:/etc/nginx/conf.d/
@@ -36,21 +38,18 @@ services:
     image: mariadb:10.6.10
     restart: unless-stopped
     ports:
-    - ${DB_PORT}:${DB_PORT}
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - ./.docker/mysql/dbdata:/var/lib/mysql
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}     
+      MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_TCP_PORT: ${DB_PORT}
     networks:
-    - microservices
+      - microservices
 
-networks:  
+networks:
   microservices:
     driver: bridge
-  
-
-
